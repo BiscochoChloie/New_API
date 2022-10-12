@@ -5,7 +5,8 @@ import '../config/apiConfig.dart';
 
 class AuthServices {
   static Future<void> logIn(String email, password) async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+
     var jsonResponse;
     Map data = {'email': email, 'password': password};
     print(data);
@@ -26,8 +27,10 @@ class AuthServices {
     print(response.statusCode);
 
     if (response.statusCode == 201) {
+      await preferences.setString('token', json.decode(response.body)['token']);
       jsonResponse = json.decode(response.body.toString());
-      preferences.setString("token", json.decode(response.body)['token']);
+      // preferences.setString("token", json.decode(response.body)['token']);
+      print(preferences.getString('token'));
       print('success');
     } else {
       print('error');
@@ -71,13 +74,13 @@ class AuthServices {
     }
   }
 
-  static Future<void> LogOut() async {
+  static Future<bool> LogOut() async {
     var jsonResponse;
     String token;
 
     final SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.reload();
     token = preferences.getString('token')!;
+    await preferences.remove('token');
 
     Uri url = Uri.parse("${ApiConfig.BASE_URL}/api/logout");
     var response = await http.post(
@@ -90,14 +93,13 @@ class AuthServices {
       },
     ).timeout(Duration(seconds: 10));
 
-    print(response.body);
-    print(response.statusCode);
-
-    if (response.statusCode == 201) {
-      jsonResponse = json.decode(response.body.toString());
-      print('success');
+    if (token != null) {
+      print(preferences.getString('token'));
+      await preferences.remove('token');
+      print(preferences.getString('token'));
+      return true;
     } else {
-      print('error');
+      return false;
     }
   }
 }

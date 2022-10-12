@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:q/screens/product/list_product_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../Models/productModel.dart';
 import '../services/auth_services.dart';
 import '../services/product_services.dart';
@@ -17,7 +18,17 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  bool isLoading = false;
+  late SharedPreferences preferences;
+
+  _SharedPreferences() async {
+    preferences = await SharedPreferences.getInstance();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _SharedPreferences();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +45,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   itemBuilder: (ctx) => [
                         PopupMenuItem(
                           onTap: () async {
+                            // print(preferences.getString('token'));
+                            // await preferences.remove('token');
+                            // print(preferences.getString('token'));
                             await AuthServices.LogOut();
                             Navigator.push(
                               context,
@@ -47,6 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ]),
         floatingActionButton: FloatingActionButton.small(
           onPressed: () {
+            print(preferences.getString('token'));
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => AddProductScreen()),

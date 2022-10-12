@@ -1,6 +1,8 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'package:q/widgets/auth_textfield.dart';
+import 'package:q/widgets/link_button.dart';
 import '../../services/auth_services.dart';
 import '../home_screen.dart';
 import 'login_screen.dart';
@@ -21,53 +23,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
       TextEditingController();
 
   final _formkey = GlobalKey<FormState>();
-
-  InputDecoration inputDecoration() {
-    return InputDecoration(
-      contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-      enabledBorder: OutlineInputBorder(
-        borderSide: BorderSide(
-          color: Colors.grey,
-        ),
-      ),
-      border: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-    );
-  }
-
-  String? validateName(String? value) {
-    if (value!.length < 3) {
-      return 'Enter Valid Name';
-    } else {
-      return null;
-    }
-  }
-
-  String? validateEmail(String? value) {
-    String pattern =
-        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regex = RegExp(pattern);
-    if (!regex.hasMatch(value!)) {
-      return 'Enter Valid Email';
-    } else {
-      return null;
-    }
-  }
-
-  String? validatePassword(String? value) {
-    if (value!.isEmpty) {
-      return 'Enter Password';
-    } else {
-      return null;
-    }
-  }
-
-  // String? validateConfirmPassword(String? value) {
-  //   if (value != passwordController) {
-  //     return 'Password do not match';
-  //   } else {
-  //     return null;
-  //   }
-  // }
 
   @override
   void dispose() {
@@ -118,7 +73,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ),
                           ),
                           SizedBox(
-                            height: 20,
+                            height: 70,
                           ),
                         ],
                       ),
@@ -132,21 +87,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 Text(
                                   "Name",
                                   style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.black87),
+                                    fontSize: 15,
+                                  ),
                                 ),
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                TextFormField(
-                                    controller: nameController,
-                                    obscureText: false,
-                                    decoration: inputDecoration(),
-                                    validator: validateName),
-                                SizedBox(
-                                  height: 30,
-                                )
+                                AuthTextFormField(
+                                    textController: nameController,
+                                    label: "Name"),
                               ],
                             ),
                             Column(
@@ -155,22 +101,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 Text(
                                   "Email",
                                   style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.black87),
+                                    fontSize: 15,
+                                  ),
                                 ),
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                TextFormField(
-                                  controller: emailController,
-                                  obscureText: false,
-                                  decoration: inputDecoration(),
-                                  validator: validateEmail,
-                                ),
-                                SizedBox(
-                                  height: 30,
-                                )
+                                AuthTextFormField(
+                                    textController: emailController,
+                                    label: "Email"),
                               ],
                             ),
                             Column(
@@ -179,21 +115,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 Text(
                                   "Password",
                                   style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.black87),
+                                    fontSize: 15,
+                                  ),
                                 ),
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                TextFormField(
-                                    controller: passwordController,
-                                    obscureText: true,
-                                    decoration: inputDecoration(),
-                                    validator: validatePassword),
-                                SizedBox(
-                                  height: 30,
-                                )
+                                AuthTextFormField(
+                                    textController: passwordController,
+                                    label: "Password",
+                                    isObscure: true),
                               ],
                             ),
                             Column(
@@ -202,22 +130,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 Text(
                                   "Confirm Password",
                                   style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.black87),
+                                    fontSize: 15,
+                                  ),
                                 ),
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                TextFormField(
-                                  controller: passwordConfirmationController,
-                                  obscureText: true,
-                                  decoration: inputDecoration(),
-                                  // validator: validateConfirmPassword,
-                                ),
-                                SizedBox(
-                                  height: 30,
-                                )
+                                AuthTextFormField(
+                                    textController:
+                                        passwordConfirmationController,
+                                    label: "Confirm Password",
+                                    isObscure: true,
+                                    isConfirmPassword: true,
+                                    passwordController: passwordController),
                               ],
                             ),
                           ],
@@ -252,21 +174,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Text('Already have an account?'),
-                          TextButton(
-                            child: Text(
-                              'Sign In',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black),
-                            ),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => LoginScreen()),
-                              );
-                            },
-                          )
+                          LinkButton(
+                              label: "Log In", otherPage: (() => LoginScreen()))
                         ],
                       )
                     ],

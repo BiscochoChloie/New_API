@@ -2,9 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:q/models/userModel.dart';
+import 'package:q/widgets/link_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../services/auth_services.dart';
+import '../../widgets/auth_textfield.dart';
 import '../home_screen.dart';
 import 'register_screen.dart';
 import '../../widgets/button_widget.dart';
@@ -22,35 +24,16 @@ class _LoginScreenState extends State<LoginScreen> {
 
   final _formkey = GlobalKey<FormState>();
 
-  InputDecoration inputDecoration() {
-    return InputDecoration(
-      contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-      enabledBorder: OutlineInputBorder(
-        borderSide: BorderSide(
-          color: Colors.grey,
-        ),
-      ),
-      border: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-    );
+  late SharedPreferences preferences;
+
+  _initSharedPreferences() async {
+    preferences = await SharedPreferences.getInstance();
   }
 
-  String? validateEmail(String? value) {
-    String pattern =
-        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regex = RegExp(pattern);
-    if (!regex.hasMatch(value!)) {
-      return 'Enter Valid Email';
-    } else {
-      return null;
-    }
-  }
-
-  String? validatePassword(String? value) {
-    if (value!.isEmpty) {
-      return 'Enter Password';
-    } else {
-      return null;
-    }
+  @override
+  void initState() {
+    super.initState();
+    _initSharedPreferences();
   }
 
   @override
@@ -89,7 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                         SizedBox(
-                          height: 30,
+                          height: 70,
                         ),
                       ],
                     ),
@@ -103,22 +86,12 @@ class _LoginScreenState extends State<LoginScreen> {
                               Text(
                                 "Email",
                                 style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w400,
-                                    color: Colors.black87),
+                                  fontSize: 15,
+                                ),
                               ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              TextFormField(
-                                controller: emailController,
-                                obscureText: false,
-                                decoration: inputDecoration(),
-                                validator: validateEmail,
-                              ),
-                              SizedBox(
-                                height: 30,
-                              )
+                              AuthTextFormField(
+                                  textController: emailController,
+                                  label: 'Email'),
                             ],
                           ),
                           Column(
@@ -127,22 +100,14 @@ class _LoginScreenState extends State<LoginScreen> {
                               Text(
                                 "Password",
                                 style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w400,
-                                    color: Colors.black87),
+                                  fontSize: 15,
+                                ),
                               ),
-                              SizedBox(
-                                height: 5,
+                              AuthTextFormField(
+                                textController: passwordController,
+                                label: 'Password',
+                                isObscure: true,
                               ),
-                              TextFormField(
-                                controller: passwordController,
-                                obscureText: true,
-                                decoration: inputDecoration(),
-                                validator: validatePassword,
-                              ),
-                              SizedBox(
-                                height: 30,
-                              )
                             ],
                           )
                         ],
@@ -164,8 +129,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             );
                           });
                         } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text("Something wrong")));
+                          print('error');
                         }
                       },
                     ),
@@ -176,21 +140,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Text('Does not have account?'),
-                        TextButton(
-                          child: const Text(
-                            'Register',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black),
-                          ),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => RegisterScreen()),
-                            );
-                          },
-                        )
+                        LinkButton(
+                            label: "Register",
+                            otherPage: (() => RegisterScreen())),
                       ],
                     ),
                   ],

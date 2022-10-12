@@ -8,7 +8,8 @@ import '../models/productModel.dart';
 class ProductServices {
   static Future<List<Product>> getAllProducts() async {
     String token;
-    SharedPreferences preferences = await SharedPreferences.getInstance();
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+
     preferences.reload();
     token = preferences.getString('token')!;
     var response = await http.get(
