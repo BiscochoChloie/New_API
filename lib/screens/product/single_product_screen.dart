@@ -97,7 +97,7 @@ class _SingleProductScreenState extends State<SingleProductScreen> {
                 "₱${widget.product.price}",
               ),
               const SizedBox(
-                height: 30,
+                height: 35,
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 80.0),

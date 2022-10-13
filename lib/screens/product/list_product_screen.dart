@@ -51,7 +51,7 @@ class _ListProductScreenState extends State<ListProductScreen> {
                     child: Row(
                       children: [
                         SizedBox(
-                          height: 130,
+                          height: 135,
                           width: 110,
                           child: Image.network(product!.imageLink),
                         ),

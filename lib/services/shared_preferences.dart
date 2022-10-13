@@ -17,7 +17,5 @@ class SharedPrefs {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.remove('token');
     print(preferences.getString('token'));
-
-    // return token;
   }
 }

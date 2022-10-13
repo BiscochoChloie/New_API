@@ -125,6 +125,7 @@ class ProductServices {
     if (response.statusCode == 201) {
       jsonResponse = json.decode(response.body.toString());
       // Product.fromJson(jsonDecode(response.body));
+
     } else {
       throw Exception('Failed to Edit a Product');
     }

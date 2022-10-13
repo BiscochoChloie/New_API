@@ -162,7 +162,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
-                                    content: Text("Something wrong")));
+                                    content: Text("Something wrong ")));
                           }
                         },
                       ),

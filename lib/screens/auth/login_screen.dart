@@ -138,7 +138,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        Text('Does not have account?'),
+                        Text('Does not have account? '),
                         LinkButton(
                             label: "Register",
                             otherPage: (() => RegisterScreen())),
