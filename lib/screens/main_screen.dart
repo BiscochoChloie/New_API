@@ -1,4 +1,7 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
+import 'package:q/services/shared_preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'auth/login_screen.dart';
@@ -12,31 +15,24 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  String? token;
+
+  checkUserLoginState() async {
+    await SharedPrefs.getToken().then((value) {
+      setState(() {
+        token = value;
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    checkUserLoginState();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    String token = '';
-
-    void getToken() async {
-      final SharedPreferences preferences =
-          await SharedPreferences.getInstance();
-      setState(() {
-        token = preferences.getString('token')!;
-      });
-    }
-
-    @override
-    void initState() {
-      super.initState();
-      getToken();
-    }
-
-    return token != ""
-        ? Scaffold(
-            appBar: AppBar(
-              title: const Text("CEOSI"),
-            ),
-            body: const HomeScreen(),
-          )
-        : const LoginScreen();
+    return token != null ? HomeScreen() : LoginScreen();
   }
 }

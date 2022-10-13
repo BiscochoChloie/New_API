@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:q/services/shared_preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../config/apiConfig.dart';
@@ -8,10 +9,9 @@ import '../models/productModel.dart';
 class ProductServices {
   static Future<List<Product>> getAllProducts() async {
     String token;
-    final SharedPreferences preferences = await SharedPreferences.getInstance();
-
-    preferences.reload();
+    SharedPreferences preferences = await SharedPreferences.getInstance();
     token = preferences.getString('token')!;
+
     var response = await http.get(
       Uri.parse("${ApiConfig.BASE_URL}/api/products"),
       headers: {
@@ -22,8 +22,8 @@ class ProductServices {
       },
     );
     if (response.statusCode == 200) {
+      print(token);
       var jsonResponse = json.decode(response.body);
-
       var jsonProducts = jsonResponse['data'];
 
       List<Product> products = [];
@@ -40,7 +40,6 @@ class ProductServices {
   static Future<Product> getSingleProducts(int id) async {
     String token;
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.reload();
     token = preferences.getString('token')!;
     var response = await http.get(
       Uri.parse("${ApiConfig.BASE_URL}/api/products/$id"),
@@ -66,7 +65,6 @@ class ProductServices {
       // 'description': product.description,
       'price': price
     };
-    print(data);
     String? token;
     final prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token');
@@ -94,8 +92,7 @@ class ProductServices {
     }
   }
 
-  static Future<Product> EditProduct(
-      int id, String name, imagelink, price) async {
+  static Future<void> editProduct(int id, String name, imagelink, price) async {
     var jsonResponse;
     Map data = {
       'name': name,
@@ -106,8 +103,8 @@ class ProductServices {
     };
 
     String? token;
-    final prefs = await SharedPreferences.getInstance();
-    token = prefs.getString('token');
+    final preferences = await SharedPreferences.getInstance();
+    token = preferences.getString('token');
 
     String body = json.encode(data);
     Uri url = Uri.parse("${ApiConfig.BASE_URL}/api/products/$id");
@@ -126,21 +123,19 @@ class ProductServices {
     print(response.statusCode);
 
     if (response.statusCode == 201) {
-      return Product.fromJson(jsonDecode(response.body));
-      // jsonResponse = json.decode(response.body.toString());
+      jsonResponse = json.decode(response.body.toString());
+      // Product.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to Edit a Product');
     }
   }
 
-  static Future<void> DeleteProduct(
-    String id,
-  ) async {
+  static Future<void> DeleteProduct(String id) async {
     var jsonResponse;
 
     String? token;
-    final prefs = await SharedPreferences.getInstance();
-    token = prefs.getString('token');
+    final preferences = await SharedPreferences.getInstance();
+    token = preferences.getString('token');
 
     Uri url = Uri.parse("${ApiConfig.BASE_URL}/api/products/$id");
     var response = await http.delete(

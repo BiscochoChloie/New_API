@@ -16,13 +16,12 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  final GlobalKey<FormState> _registerFormKey = GlobalKey<FormState>();
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController passwordConfirmationController =
       TextEditingController();
-
-  final _formkey = GlobalKey<FormState>();
 
   @override
   void dispose() {
@@ -56,7 +55,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             height: MediaQuery.of(context).size.height,
             width: double.infinity,
             child: Form(
-              key: _formkey,
+              key: _registerFormKey,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -148,7 +147,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ButtonWidget(
                         text: 'Register',
                         onClicked: () {
-                          if (_formkey.currentState!.validate()) {
+                          if (_registerFormKey.currentState!.validate()) {
                             setState(() {
                               AuthServices.Register(
                                   nameController.text,

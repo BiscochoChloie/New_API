@@ -29,7 +29,6 @@ class AuthServices {
     if (response.statusCode == 201) {
       await preferences.setString('token', json.decode(response.body)['token']);
       jsonResponse = json.decode(response.body.toString());
-      // preferences.setString("token", json.decode(response.body)['token']);
       print(preferences.getString('token'));
       print('success');
     } else {
@@ -63,7 +62,6 @@ class AuthServices {
 
     print(response.body);
     print(response.statusCode);
-    print(email);
 
     if (response.statusCode == 201) {
       jsonResponse = json.decode(response.body.toString());
@@ -76,10 +74,10 @@ class AuthServices {
 
   static Future<bool> LogOut() async {
     var jsonResponse;
-    String token;
 
-    final SharedPreferences preferences = await SharedPreferences.getInstance();
-    token = preferences.getString('token')!;
+    String? token;
+    final preferences = await SharedPreferences.getInstance();
+    token = preferences.getString('token');
     await preferences.remove('token');
 
     Uri url = Uri.parse("${ApiConfig.BASE_URL}/api/logout");
@@ -94,8 +92,6 @@ class AuthServices {
     ).timeout(Duration(seconds: 10));
 
     if (token != null) {
-      print(preferences.getString('token'));
-      await preferences.remove('token');
       print(preferences.getString('token'));
       return true;
     } else {

@@ -2,9 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:q/models/productModel.dart';
+import 'package:q/widgets/product_textfield.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../services/product_services.dart';
+import '../../widgets/dialog_widget.dart';
 import '../home_screen.dart';
 import '../../widgets/button_widget.dart';
 
@@ -15,22 +17,11 @@ class AddProductScreen extends StatefulWidget {
 
 class _AddProductScreenState extends State<AddProductScreen> {
   late int id;
+  final GlobalKey<FormState> _addProductFormKey = GlobalKey<FormState>();
   TextEditingController nameController = TextEditingController();
   TextEditingController imageLinkController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController priceController = TextEditingController();
-
-  InputDecoration inputDecoration() {
-    return InputDecoration(
-      contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-      enabledBorder: OutlineInputBorder(
-        borderSide: BorderSide(
-          color: Colors.grey,
-        ),
-      ),
-      border: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-    );
-  }
 
   Future<void> _confirmDialog() async {
     return showDialog<void>(
@@ -87,128 +78,130 @@ class _AddProductScreenState extends State<AddProductScreen> {
               )),
         ),
         body: SafeArea(
-            child: Container(
+            child: SizedBox(
           height: MediaQuery.of(context).size.height,
           width: double.infinity,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: const [
-                      Text(
-                        "Add Product",
-                        style: TextStyle(
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
+          child: Form(
+            key: _addProductFormKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: const [
+                        Text(
+                          "Add Product",
+                          style: TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 45,
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 40),
-                    child: Column(
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Name",
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.black87),
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            TextField(
-                                controller: nameController,
-                                obscureText: false,
-                                decoration: inputDecoration()),
-                            SizedBox(
-                              height: 20,
-                            )
-                          ],
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Image Link",
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.black87),
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            TextField(
-                                controller: imageLinkController,
-                                decoration: inputDecoration()),
-                            SizedBox(
-                              height: 20,
-                            )
-                          ],
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Description",
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.black87),
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            TextField(
-                                controller: descriptionController,
-                                decoration: inputDecoration()),
-                            SizedBox(
-                              height: 20,
-                            )
-                          ],
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Price",
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.black87),
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            TextField(
-                                controller: priceController,
-                                decoration: inputDecoration()),
-                            SizedBox(
-                              height: 30,
-                            )
-                          ],
+                        SizedBox(
+                          height: 45,
                         ),
                       ],
                     ),
-                  ),
-                  ButtonWidget(text: 'Save', onClicked: _confirmDialog),
-                  SizedBox(
-                    height: 20,
-                  ),
-                ],
-              ),
-            ],
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 40),
+                      child: Column(
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Name",
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.black87),
+                              ),
+                              ProductTextFormField(
+                                  textController: nameController,
+                                  label: 'Name'),
+                            ],
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Image Link",
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.black87),
+                              ),
+                              ProductTextFormField(
+                                  textController: imageLinkController,
+                                  label: 'Image Link')
+                            ],
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Description",
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.black87),
+                              ),
+                              ProductTextFormField(
+                                  textController: descriptionController,
+                                  label: 'Description')
+                            ],
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Price",
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.black87),
+                              ),
+                              ProductTextFormField(
+                                  textController: priceController,
+                                  label: 'Price')
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    ButtonWidget(
+                      text: 'Save',
+                      onClicked: () {
+                        if (_addProductFormKey.currentState!.validate()) {
+                          setState(() {
+                            _confirmDialog();
+                            // showDialog(
+                            //     context: context,
+                            //     barrierDismissible: false,
+                            //     builder: (_) => DialogWidget(
+                            //           text: 'Are you sure want add this item?',
+                            //           function: () {
+                            //             ProductServices.addProduct(
+                            //                 nameController.text,
+                            //                 imageLinkController.text,
+                            //                 priceController.text);
+                            //           },
+                            //           otherPage: (() => HomeScreen()),
+                            //         ));
+                          });
+                        } else {
+                          print('error');
+                        }
+                      },
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         )));
   }

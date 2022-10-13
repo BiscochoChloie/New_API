@@ -19,10 +19,9 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final GlobalKey<FormState> _loginFormKey = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-
-  final _formkey = GlobalKey<FormState>();
 
   late SharedPreferences preferences;
 
@@ -56,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
           height: MediaQuery.of(context).size.height,
           width: double.infinity,
           child: Form(
-            key: _formkey,
+            key: _loginFormKey,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -116,13 +115,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     ButtonWidget(
                       text: 'Login',
                       onClicked: () {
-                        if (_formkey.currentState!.validate()) {
-                          setState(() {
-                            AuthServices.logIn(
+                        if (_loginFormKey.currentState!.validate()) {
+                          setState(() async {
+                            await AuthServices.logIn(
                               emailController.text,
                               passwordController.text,
                             );
-                            Navigator.push(
+                            await Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => HomeScreen()),

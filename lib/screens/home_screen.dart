@@ -1,7 +1,8 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, use_build_context_synchronously, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
 import 'package:q/screens/product/list_product_screen.dart';
+import 'package:q/services/shared_preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../Models/productModel.dart';
 import '../services/auth_services.dart';
@@ -18,16 +19,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late SharedPreferences preferences;
-
-  _SharedPreferences() async {
-    preferences = await SharedPreferences.getInstance();
-  }
-
   @override
   void initState() {
     super.initState();
-    _SharedPreferences();
+    // AuthServices.LogOut();
   }
 
   @override
@@ -45,9 +40,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   itemBuilder: (ctx) => [
                         PopupMenuItem(
                           onTap: () async {
-                            // print(preferences.getString('token'));
-                            // await preferences.remove('token');
-                            // print(preferences.getString('token'));
                             await AuthServices.LogOut();
                             Navigator.push(
                               context,
@@ -61,7 +53,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ]),
         floatingActionButton: FloatingActionButton.small(
           onPressed: () {
-            print(preferences.getString('token'));
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => AddProductScreen()),
