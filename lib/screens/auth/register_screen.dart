@@ -7,7 +7,6 @@ import 'package:q/widgets/submit_button.dart';
 import '../../services/auth_services.dart';
 import '../home_screen.dart';
 import 'login_screen.dart';
-import '../../widgets/button_widget.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});

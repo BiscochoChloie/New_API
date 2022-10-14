@@ -1,16 +1,13 @@
 // ignore_for_file: prefer_const_constructors, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:q/models/userModel.dart';
 import 'package:q/widgets/link_button.dart';
 import 'package:q/widgets/submit_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../services/auth_services.dart';
 import '../../widgets/auth_textfield.dart';
 import '../home_screen.dart';
 import 'register_screen.dart';
-import '../../widgets/button_widget.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -49,7 +46,6 @@ class _LoginScreenState extends State<LoginScreen> {
       _isProcessing = true;
     });
 
-    // mock register api call
     Future.delayed(const Duration(seconds: 2)).then((value) async {
       await AuthServices.logIn(
         emailController.text,

@@ -1,16 +1,14 @@
 // ignore_for_file: prefer_const_constructors, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:q/models/productModel.dart';
 import 'package:q/widgets/product_textfield.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../services/product_services.dart';
-import '../../widgets/dialog_widget.dart';
+import '../../widgets/submit_button.dart';
 import '../home_screen.dart';
-import '../../widgets/button_widget.dart';
 
 class AddProductScreen extends StatefulWidget {
+  const AddProductScreen({super.key});
+
   @override
   State<AddProductScreen> createState() => _AddProductScreenState();
 }
@@ -23,7 +21,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   TextEditingController descriptionController = TextEditingController();
   TextEditingController priceController = TextEditingController();
 
-  Future<void> _confirmDialog() async {
+  Future<void> _confirmAddProduct() async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -170,28 +168,13 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         ],
                       ),
                     ),
-                    ButtonWidget(
-                      text: 'Save',
-                      onClicked: () {
+                    SubmitButton(
+                      label: 'Save',
+                      formKey: _addProductFormKey,
+                      isProcessing: false,
+                      validated: () {
                         if (_addProductFormKey.currentState!.validate()) {
-                          setState(() {
-                            _confirmDialog();
-                            // showDialog(
-                            //     context: context,
-                            //     barrierDismissible: false,
-                            //     builder: (_) => DialogWidget(
-                            //           text: 'Are you sure want add this item?',
-                            //           function: () {
-                            //             ProductServices.addProduct(
-                            //                 nameController.text,
-                            //                 imageLinkController.text,
-                            //                 priceController.text);
-                            //           },
-                            //           otherPage: (() => HomeScreen()),
-                            //         ));
-                          });
-                        } else {
-                          print('error');
+                          _confirmAddProduct();
                         }
                       },
                     ),

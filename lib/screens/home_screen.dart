@@ -2,14 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:q/screens/product/list_product_screen.dart';
-import 'package:q/services/shared_preferences.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../Models/productModel.dart';
 import '../services/auth_services.dart';
-import '../services/product_services.dart';
 import 'auth/login_screen.dart';
 import 'product/add_product_screen.dart';
-import 'product/single_product_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

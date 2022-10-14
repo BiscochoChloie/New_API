@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:q/widgets/product_textfield.dart';
 import '../../models/productModel.dart';
 import '../../services/product_services.dart';
+import '../../widgets/submit_button.dart';
 import '../home_screen.dart';
-import '../../widgets/button_widget.dart';
 
 class EditProductScreen extends StatefulWidget {
   final ProductModel product;
@@ -18,13 +18,14 @@ class EditProductScreen extends StatefulWidget {
 class _EditProductScreenState extends State<EditProductScreen> {
   bool publish = false;
   late int id;
+  final GlobalKey<FormState> _editProductFormKey = GlobalKey<FormState>();
   TextEditingController nameController = TextEditingController();
   TextEditingController imageLinkController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController priceController = TextEditingController();
   TextEditingController publishController = TextEditingController();
 
-  Future<void> _confirmDialog() async {
+  Future<void> _confirmEditProduct() async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -93,97 +94,110 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 child: SizedBox(
                     height: MediaQuery.of(context).size.height,
                     width: double.infinity,
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            children: [
-                              Text(
-                                "Edit Product",
-                                style: TextStyle(
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.bold,
+                    child: Form(
+                      key: _editProductFormKey,
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              children: [
+                                Text(
+                                  "Edit Product",
+                                  style: TextStyle(
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ),
-                              SizedBox(
-                                height: 45,
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 40),
-                                child: Column(
-                                  children: [
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "Name",
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w400,
-                                              color: Colors.black87),
-                                        ),
-                                        ProductTextFormField(
-                                            textController: nameController,
-                                            label: 'Name')
-                                      ],
-                                    ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "Image Link",
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w400,
-                                              color: Colors.black87),
-                                        ),
-                                        ProductTextFormField(
-                                            textController: imageLinkController,
-                                            label: 'Image Link')
-                                      ],
-                                    ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "Description",
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w400,
-                                              color: Colors.black87),
-                                        ),
-                                        ProductTextFormField(
-                                            textController:
-                                                descriptionController,
-                                            label: 'Description')
-                                      ],
-                                    ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "Price",
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w400,
-                                              color: Colors.black87),
-                                        ),
-                                        ProductTextFormField(
-                                            textController: priceController,
-                                            label: 'price')
-                                      ],
-                                    ),
-                                  ],
+                                SizedBox(
+                                  height: 45,
                                 ),
-                              ),
-                              ButtonWidget(
-                                  text: 'Edit', onClicked: _confirmDialog),
-                            ],
-                          )
-                        ])))));
+                                Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 40),
+                                  child: Column(
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Name",
+                                            style: TextStyle(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w400,
+                                                color: Colors.black87),
+                                          ),
+                                          ProductTextFormField(
+                                              textController: nameController,
+                                              label: 'Name')
+                                        ],
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Image Link",
+                                            style: TextStyle(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w400,
+                                                color: Colors.black87),
+                                          ),
+                                          ProductTextFormField(
+                                              textController:
+                                                  imageLinkController,
+                                              label: 'Image Link')
+                                        ],
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Description",
+                                            style: TextStyle(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w400,
+                                                color: Colors.black87),
+                                          ),
+                                          ProductTextFormField(
+                                              textController:
+                                                  descriptionController,
+                                              label: 'Description')
+                                        ],
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Price",
+                                            style: TextStyle(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w400,
+                                                color: Colors.black87),
+                                          ),
+                                          ProductTextFormField(
+                                              textController: priceController,
+                                              label: 'price')
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SubmitButton(
+                                  label: 'Edit',
+                                  formKey: _editProductFormKey,
+                                  isProcessing: false,
+                                  validated: () {
+                                    if (_editProductFormKey.currentState!
+                                        .validate()) {
+                                      _confirmEditProduct();
+                                    }
+                                  },
+                                ),
+                              ],
+                            )
+                          ]),
+                    )))));
   }
 }

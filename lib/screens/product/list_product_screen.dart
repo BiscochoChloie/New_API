@@ -53,8 +53,27 @@ class _ListProductScreenState extends State<ListProductScreen> {
                         SizedBox(
                           height: 135,
                           width: 110,
-                          child: Image.network(product!.imageLink!),
+                          child: Image.network(
+                            product!.imageLink!,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                color: Colors.amber,
+                                alignment: Alignment.center,
+                                child: const Text(
+                                  'Whoops!',
+                                  style: TextStyle(fontSize: 30),
+                                ),
+                              );
+                            },
+                          ),
                         ),
+                        //                      Image (image: NetworkImageWithRetry(
+                        // product!.imageLink!),
+                        // errorBuilder: (context, exception, stackTrack) => Icon(Icons.error,),
+                        // loadingBuilder: (context, exception, stackTrack) => CircularProgressIndicator(),
+
+                        //                   )),
                         Expanded(
                             child: SizedBox(
                                 width: 500,

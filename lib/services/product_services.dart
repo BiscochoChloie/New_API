@@ -1,16 +1,14 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:q/services/shared_preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../config/apiConfig.dart';
 import '../models/productModel.dart';
 
 class ProductServices {
   static Future<List<ProductModel>> getAllProducts() async {
-    String token;
+    String? token;
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    token = preferences.getString('token')!;
+    token = preferences.getString('token');
 
     var response = await http.get(
       Uri.parse("${ApiConfig.BASE_URL}/api/products"),
@@ -38,9 +36,9 @@ class ProductServices {
   }
 
   static Future<ProductModel?> getSingleProducts(int id) async {
-    String token;
+    String? token;
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    token = preferences.getString('token')!;
+    token = preferences.getString('token');
     var response = await http.get(
       Uri.parse("${ApiConfig.BASE_URL}/api/products/$id"),
       headers: {
@@ -153,7 +151,7 @@ class ProductServices {
     if (response.statusCode == 201) {
       print("Deleted");
     } else {
-      print('Error');
+      throw Exception('Failed to Delete a Product');
     }
   }
 }
