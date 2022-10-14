@@ -23,7 +23,7 @@ class _ListProductScreenState extends State<ListProductScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Product>>(
+    return FutureBuilder<List<ProductModel>>(
         future: ProductServices.getAllProducts(),
         builder: (context, snapshot) {
           if (snapshot.data == null) {
@@ -53,13 +53,13 @@ class _ListProductScreenState extends State<ListProductScreen> {
                         SizedBox(
                           height: 135,
                           width: 110,
-                          child: Image.network(product!.imageLink),
+                          child: Image.network(product!.imageLink!),
                         ),
                         Expanded(
                             child: SizedBox(
                                 width: 500,
                                 child: Text(
-                                  product.name,
+                                  product.name!,
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                   ),

@@ -1,10 +1,11 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:q/models/userModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../config/apiConfig.dart';
 
 class AuthServices {
-  static Future<void> logIn(String email, password) async {
+  static Future<UserModel?> logIn(String email, password) async {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
 
     var jsonResponse;
@@ -28,15 +29,15 @@ class AuthServices {
 
     if (response.statusCode == 201) {
       await preferences.setString('token', json.decode(response.body)['token']);
-      jsonResponse = json.decode(response.body.toString());
       print(preferences.getString('token'));
-      print('success');
+      return UserModel.fromJson(json.decode(response.body));
+      // jsonResponse = json.decode(response.body.toString());
     } else {
-      print('error');
+      throw Exception('Failed to Log In');
     }
   }
 
-  static Future<void> Register(
+  static Future<UserModel?> Register(
       String name, email, password, passwordConfirmation) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     var jsonResponse;
@@ -66,9 +67,9 @@ class AuthServices {
     if (response.statusCode == 201) {
       jsonResponse = json.decode(response.body.toString());
       preferences.setString("token", json.decode(response.body)['token']);
-      print('success');
+      return UserModel.fromJson(json.decode(response.body));
     } else {
-      print('error');
+      throw Exception('Failed to Register');
     }
   }
 
@@ -95,7 +96,7 @@ class AuthServices {
       print(preferences.getString('token'));
       return true;
     } else {
-      return false;
+      throw Exception('Failed to Log Out');
     }
   }
 }

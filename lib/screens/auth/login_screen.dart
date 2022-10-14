@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:q/models/userModel.dart';
 import 'package:q/widgets/link_button.dart';
+import 'package:q/widgets/submit_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../services/auth_services.dart';
@@ -22,6 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _loginFormKey = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  bool _isProcessing = false;
 
   late SharedPreferences preferences;
 
@@ -40,6 +42,28 @@ class _LoginScreenState extends State<LoginScreen> {
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
+  }
+
+  void loginUser() {
+    setState(() {
+      _isProcessing = true;
+    });
+
+    // mock register api call
+    Future.delayed(const Duration(seconds: 2)).then((value) async {
+      await AuthServices.logIn(
+        emailController.text,
+        passwordController.text,
+      );
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => HomeScreen()),
+      );
+
+      setState(() {
+        _isProcessing = false;
+      });
+    });
   }
 
   @override
@@ -112,23 +136,13 @@ class _LoginScreenState extends State<LoginScreen> {
                         ],
                       ),
                     ),
-                    ButtonWidget(
-                      text: 'Login',
-                      onClicked: () {
+                    SubmitButton(
+                      label: 'Login',
+                      formKey: _loginFormKey,
+                      isProcessing: _isProcessing,
+                      validated: () {
                         if (_loginFormKey.currentState!.validate()) {
-                          setState(() async {
-                            await AuthServices.logIn(
-                              emailController.text,
-                              passwordController.text,
-                            );
-                            await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => HomeScreen()),
-                            );
-                          });
-                        } else {
-                          print('error');
+                          loginUser();
                         }
                       },
                     ),

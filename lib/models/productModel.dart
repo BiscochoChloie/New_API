@@ -1,17 +1,17 @@
-class Product {
-  int id;
-  String name;
-  String imageLink;
-  String price;
+class ProductModel {
+  int? id;
+  String? name;
+  String? imageLink;
+  String? price;
 
-  Product({
-    required this.id,
-    required this.name,
-    required this.imageLink,
-    required this.price,
+  ProductModel({
+    this.id,
+    this.name,
+    this.imageLink,
+    this.price,
   });
 
-  factory Product.fromJson(Map<String, dynamic> json) => Product(
+  factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
         id: json["id"],
         name: json["name"],
         imageLink: json["image_link"],

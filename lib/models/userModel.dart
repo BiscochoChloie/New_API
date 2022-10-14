@@ -6,16 +6,16 @@ String userToJson(UserModel data) => json.encode(data.toJson());
 
 class UserModel {
   UserModel({
-    required this.name,
-    required this.email,
-    required this.password,
-    required this.passwordConfirmation,
+    this.name,
+    this.email,
+    this.password,
+    this.passwordConfirmation,
   });
 
-  String name;
-  String email;
-  String password;
-  String passwordConfirmation;
+  String? name;
+  String? email;
+  String? password;
+  String? passwordConfirmation;
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
         name: json["name"],

@@ -7,7 +7,7 @@ import '../config/apiConfig.dart';
 import '../models/productModel.dart';
 
 class ProductServices {
-  static Future<List<Product>> getAllProducts() async {
+  static Future<List<ProductModel>> getAllProducts() async {
     String token;
     SharedPreferences preferences = await SharedPreferences.getInstance();
     token = preferences.getString('token')!;
@@ -26,18 +26,18 @@ class ProductServices {
       var jsonResponse = json.decode(response.body);
       var jsonProducts = jsonResponse['data'];
 
-      List<Product> products = [];
+      List<ProductModel> products = [];
       for (var jsonProduct in jsonProducts) {
-        Product product = Product.fromJson(jsonProduct);
+        ProductModel product = ProductModel.fromJson(jsonProduct);
         products.add(product);
       }
       return products;
     } else {
-      return <Product>[];
+      return <ProductModel>[];
     }
   }
 
-  static Future<Product> getSingleProducts(int id) async {
+  static Future<ProductModel?> getSingleProducts(int id) async {
     String token;
     SharedPreferences preferences = await SharedPreferences.getInstance();
     token = preferences.getString('token')!;
@@ -51,13 +51,13 @@ class ProductServices {
       },
     );
     if (response.statusCode == 201) {
-      return Product.fromJson(json.decode(response.body));
+      return ProductModel.fromJson(json.decode(response.body));
     } else {
       throw Exception('Failed to Get a Product');
     }
   }
 
-  static Future<void> addProduct(String name, imagelink, price) async {
+  static Future<ProductModel> addProduct(String name, imagelink, price) async {
     var jsonResponse;
     Map data = {
       'name': name,
@@ -86,18 +86,20 @@ class ProductServices {
     print(response.statusCode);
 
     if (response.statusCode == 201) {
-      jsonResponse = json.decode(response.body.toString());
+      // jsonResponse = json.decode(response.body.toString());
+      return ProductModel.fromJson(json.decode(response.body));
     } else {
       throw Exception('Failed to Add a Product');
     }
   }
 
-  static Future<void> editProduct(int id, String name, imagelink, price) async {
+  static Future<ProductModel?> editProduct(
+      int id, String name, imagelink, price) async {
     var jsonResponse;
     Map data = {
       'name': name,
       'image_link': imagelink,
-      // 'description': product.description,
+      'description': '',
       'price': price,
       'is_published': true
     };
@@ -123,9 +125,8 @@ class ProductServices {
     print(response.statusCode);
 
     if (response.statusCode == 201) {
-      jsonResponse = json.decode(response.body.toString());
-      // Product.fromJson(jsonDecode(response.body));
-
+      // jsonResponse = json.decode(response.body.toString());
+      ProductModel.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to Edit a Product');
     }

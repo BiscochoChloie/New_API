@@ -1,8 +1,9 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:q/widgets/auth_textfield.dart';
 import 'package:q/widgets/link_button.dart';
+import 'package:q/widgets/submit_button.dart';
 import '../../services/auth_services.dart';
 import '../home_screen.dart';
 import 'login_screen.dart';
@@ -22,6 +23,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController passwordConfirmationController =
       TextEditingController();
+  bool _isProcessing = false;
 
   @override
   void dispose() {
@@ -30,6 +32,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
     passwordController.dispose();
     passwordConfirmationController.dispose();
     super.dispose();
+  }
+
+  void registerUser() {
+    setState(() {
+      _isProcessing = true;
+    });
+
+    Future.delayed(const Duration(seconds: 2)).then((value) async {
+      await AuthServices.Register(nameController.text, emailController.text,
+          passwordController.text, passwordConfirmationController.text);
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => HomeScreen()));
+    });
+
+    setState(() {
+      _isProcessing = false;
+    });
   }
 
   @override
@@ -144,25 +163,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ],
                         ),
                       ),
-                      ButtonWidget(
-                        text: 'Register',
-                        onClicked: () {
+                      SubmitButton(
+                        label: 'Register',
+                        formKey: _registerFormKey,
+                        isProcessing: _isProcessing,
+                        validated: () {
                           if (_registerFormKey.currentState!.validate()) {
-                            setState(() {
-                              AuthServices.Register(
-                                  nameController.text,
-                                  emailController.text,
-                                  passwordController.text,
-                                  passwordConfirmationController.text);
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => HomeScreen()));
-                            });
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text("Something wrong ")));
+                            registerUser();
                           }
                         },
                       ),

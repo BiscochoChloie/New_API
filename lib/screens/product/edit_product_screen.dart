@@ -8,7 +8,7 @@ import '../home_screen.dart';
 import '../../widgets/button_widget.dart';
 
 class EditProductScreen extends StatefulWidget {
-  final Product product;
+  final ProductModel product;
   const EditProductScreen({Key? key, required this.product}) : super(key: key);
 
   @override
@@ -42,7 +42,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
               child: Text('Yes'),
               onPressed: () async {
                 await ProductServices.editProduct(
-                    widget.product.id,
+                    widget.product.id!,
                     nameController.text,
                     imageLinkController.text,
                     priceController.text);
@@ -65,10 +65,10 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
   @override
   void initState() {
-    id = widget.product.id;
-    nameController.text = widget.product.name;
-    imageLinkController.text = widget.product.imageLink;
-    priceController.text = widget.product.price;
+    id = widget.product.id!;
+    nameController.text = widget.product.name!;
+    imageLinkController.text = widget.product.imageLink!;
+    priceController.text = widget.product.price!;
     super.initState();
   }
 

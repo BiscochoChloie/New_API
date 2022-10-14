@@ -7,7 +7,7 @@ import 'edit_product_screen.dart';
 import '../home_screen.dart';
 
 class SingleProductScreen extends StatefulWidget {
-  final Product product;
+  final ProductModel product;
   const SingleProductScreen({Key? key, required this.product})
       : super(key: key);
 
@@ -78,7 +78,7 @@ class _SingleProductScreenState extends State<SingleProductScreen> {
                   width: 300,
                   height: 380,
                   child: Image.network(
-                    widget.product.imageLink,
+                    widget.product.imageLink!,
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -87,7 +87,7 @@ class _SingleProductScreenState extends State<SingleProductScreen> {
                 height: 10,
               ),
               Text(
-                widget.product.name,
+                widget.product.name!,
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               const SizedBox(
