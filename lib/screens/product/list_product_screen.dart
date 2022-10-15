@@ -58,33 +58,37 @@ class _ListProductScreenState extends State<ListProductScreen> {
                             fit: BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) {
                               return Container(
-                                color: Colors.amber,
+                                // color: Colors.amber,
                                 alignment: Alignment.center,
-                                child: const Text(
-                                  'Whoops!',
-                                  style: TextStyle(fontSize: 30),
+                                child:
+                                    // Icon(Icons.error)
+
+                                    Center(
+                                  child: Image.asset(
+                                    'assets/images/no-image.png',
+                                    height: 135,
+                                    fit: BoxFit.cover,
+                                  ),
+                                  //   //     Text(
+                                  //   //   'No Image Available',
+                                  //   // ),
                                 ),
                               );
                             },
                           ),
                         ),
-                        //                      Image (image: NetworkImageWithRetry(
-                        // product!.imageLink!),
-                        // errorBuilder: (context, exception, stackTrack) => Icon(Icons.error,),
-                        // loadingBuilder: (context, exception, stackTrack) => CircularProgressIndicator(),
-
-                        //                   )),
+                        SizedBox(width: 10),
                         Expanded(
                             child: SizedBox(
-                                width: 500,
+                                // width: 500,
                                 child: Text(
-                                  product.name!,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ))),
-                        SizedBox(width: 15),
-                        Expanded(child: Text("₱${product.price}"))
+                          product.name!,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ))),
+                        SizedBox(width: 40),
+                        Text("₱${product.price}")
                       ],
                     ),
                   ),

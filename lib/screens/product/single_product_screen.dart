@@ -80,7 +80,30 @@ class _SingleProductScreenState extends State<SingleProductScreen> {
                   child: Image.network(
                     widget.product.imageLink!,
                     fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        // color: Colors.amber,
+                        alignment: Alignment.center,
+                        child: Center(
+                          child:
+                              // Icon(Icons.error)
+                              Image.asset(
+                            'assets/images/no-image.png',
+                            height: 300,
+                            fit: BoxFit.cover,
+                          ),
+                          //     Text(
+                          //   'No Image Available',
+                          // ),
+                        ),
+                      );
+                    },
                   ),
+
+                  // Image.network(
+                  //   widget.product.imageLink!,
+                  //   fit: BoxFit.cover,
+                  // ),
                 ),
               ),
               SizedBox(

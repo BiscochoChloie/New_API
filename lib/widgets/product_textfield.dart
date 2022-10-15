@@ -31,6 +31,7 @@ class ProductTextFormField extends StatelessWidget {
                   borderSide: BorderSide(color: Colors.grey)),
             ),
             // InputDecoration(labelText: label),
+            maxLines: null,
             controller: textController,
             validator: (value) {
               if (value == null || value.isEmpty) {
