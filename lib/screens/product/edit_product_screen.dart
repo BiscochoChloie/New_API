@@ -1,9 +1,9 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
-import 'package:q/widgets/product_textfield.dart';
 import '../../models/productModel.dart';
-import '../../services/product_services.dart';
+import '../../repositories/product_repository.dart';
+import '../../widgets/product_textfield.dart';
 import '../../widgets/submit_button.dart';
 import '../home_screen.dart';
 
@@ -41,9 +41,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
           actions: <Widget>[
             TextButton(
               child: Text('Yes'),
-              onPressed: () async {
-                await ProductServices.editProduct(
-                    widget.product.id!,
+              onPressed: () {
+                print(
+                  widget.product.id,
+                );
+                ProductRepository().editProduct(
+                    widget.product.id,
                     nameController.text,
                     imageLinkController.text,
                     priceController.text);
@@ -66,7 +69,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
   @override
   void initState() {
-    id = widget.product.id!;
+    id = widget.product.id;
     nameController.text = widget.product.name!;
     imageLinkController.text = widget.product.imageLink!;
     priceController.text = widget.product.price!;

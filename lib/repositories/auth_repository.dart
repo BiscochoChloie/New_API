@@ -1,11 +1,14 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:q/models/userModel.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../config/apiConfig.dart';
+import 'package:q/repositories/auth_repository_interface.dart';
 
-class AuthServices {
-  static Future<UserModel?> logIn(String email, password) async {
+import 'package:shared_preferences/shared_preferences.dart';
+import '../configurations/api_configuration.dart';
+import '../models/userModel.dart';
+
+class AuthRepository implements AuthRepositoryInterface {
+  @override
+  Future<UserModel?> logIn(String email, password) async {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
 
     var jsonResponse;
@@ -13,7 +16,7 @@ class AuthServices {
     print(data);
 
     String body = json.encode(data);
-    Uri url = Uri.parse("${ApiConfig.BASE_URL}/api/login");
+    Uri url = Uri.parse("${ApiConfiguration.BASE_URL}/api/login");
     var response = await http.post(
       url,
       body: body,
@@ -37,7 +40,8 @@ class AuthServices {
     }
   }
 
-  static Future<UserModel?> Register(
+  @override
+  Future<UserModel?> register(
       String name, email, password, passwordConfirmation) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     var jsonResponse;
@@ -50,7 +54,7 @@ class AuthServices {
     print(data);
 
     String body = json.encode(data);
-    Uri url = Uri.parse("${ApiConfig.BASE_URL}/api/register");
+    Uri url = Uri.parse("${ApiConfiguration.BASE_URL}/api/register");
     var response = await http.post(
       url,
       body: body,
@@ -73,7 +77,8 @@ class AuthServices {
     }
   }
 
-  static Future<bool> LogOut() async {
+  @override
+  Future<bool> logOut() async {
     var jsonResponse;
 
     String? token;
@@ -81,7 +86,7 @@ class AuthServices {
     token = preferences.getString('token');
     await preferences.remove('token');
 
-    Uri url = Uri.parse("${ApiConfig.BASE_URL}/api/logout");
+    Uri url = Uri.parse("${ApiConfiguration.BASE_URL}/api/logout");
     var response = await http.post(
       url,
       headers: {

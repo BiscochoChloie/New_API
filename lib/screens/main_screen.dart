@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:q/services/shared_preferences.dart';
+import '../services/shared_preferences.dart';
 import 'auth/login_screen.dart';
 import 'home_screen.dart';
 
@@ -23,7 +23,6 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
-//
   @override
   void initState() {
     checkUserLoginState();

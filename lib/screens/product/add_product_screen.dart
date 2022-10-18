@@ -1,8 +1,8 @@
 // ignore_for_file: prefer_const_constructors, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:q/widgets/product_textfield.dart';
-import '../../services/product_services.dart';
+import '../../repositories/product_repository.dart';
+import '../../widgets/product_textfield.dart';
 import '../../widgets/submit_button.dart';
 import '../home_screen.dart';
 
@@ -38,7 +38,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
             TextButton(
               child: Text('Yes'),
               onPressed: () async {
-                await ProductServices.addProduct(nameController.text,
+                await ProductRepository.addProduct(nameController.text,
                     imageLinkController.text, priceController.text);
 
                 Navigator.push(context,

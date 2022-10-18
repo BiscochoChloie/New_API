@@ -18,4 +18,17 @@ class SharedPrefs {
     preferences.remove('token');
     print(preferences.getString('token'));
   }
+
+  static Future getLastPage() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    var lastpage = preferences.getInt("last_page");
+
+    return lastpage;
+  }
+
+  static Future getCurrentPage() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    var currentpage = preferences.getInt('current_page');
+    return currentpage;
+  }
 }

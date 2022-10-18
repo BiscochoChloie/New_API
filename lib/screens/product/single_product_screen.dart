@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import '../../models/productModel.dart';
-import '../../services/product_services.dart';
+import '../../repositories/product_repository.dart';
 import 'edit_product_screen.dart';
 import '../home_screen.dart';
 
@@ -35,8 +35,8 @@ class _SingleProductScreenState extends State<SingleProductScreen> {
           actions: <Widget>[
             TextButton(
               child: Text('Yes'),
-              onPressed: () {
-                ProductServices.DeleteProduct(widget.product.id.toString());
+              onPressed: () async {
+                ProductRepository().deleteProduct(widget.product.id.toString());
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => HomeScreen()));
               },
@@ -75,36 +75,23 @@ class _SingleProductScreenState extends State<SingleProductScreen> {
             children: [
               Center(
                 child: SizedBox(
-                  width: 300,
-                  height: 380,
-                  child: Image.network(
-                    widget.product.imageLink!,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Container(
-                        // color: Colors.amber,
-                        alignment: Alignment.center,
-                        child: Center(
-                          child:
-                              // Icon(Icons.error)
-                              Image.asset(
-                            'assets/images/no-image.png',
-                            height: 300,
+                    width: 300,
+                    height: 380,
+                    child: Uri.parse(widget.product.imageLink!).isAbsolute
+                        ? Image.network(
+                            widget.product.imageLink!,
                             fit: BoxFit.cover,
-                          ),
-                          //     Text(
-                          //   'No Image Available',
-                          // ),
-                        ),
-                      );
-                    },
-                  ),
-
-                  // Image.network(
-                  //   widget.product.imageLink!,
-                  //   fit: BoxFit.cover,
-                  // ),
-                ),
+                          )
+                        : Stack(alignment: Alignment.center, children: <Widget>[
+                            Image.asset(
+                              'assets/images/no-image.png',
+                              height: 300,
+                              fit: BoxFit.cover,
+                            ),
+                            Text(
+                              'No Image Available',
+                            ),
+                          ])),
               ),
               SizedBox(
                 height: 10,

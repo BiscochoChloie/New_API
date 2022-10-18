@@ -1,10 +1,10 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:q/widgets/auth_textfield.dart';
-import 'package:q/widgets/link_button.dart';
-import 'package:q/widgets/submit_button.dart';
-import '../../services/auth_services.dart';
+import '../../repositories/auth_repository.dart';
+import '../../widgets/auth_textfield.dart';
+import '../../widgets/link_button.dart';
+import '../../widgets/submit_button.dart';
 import '../home_screen.dart';
 import 'login_screen.dart';
 
@@ -39,7 +39,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     });
 
     Future.delayed(const Duration(seconds: 2)).then((value) async {
-      await AuthServices.Register(nameController.text, emailController.text,
+      await AuthRepository().register(nameController.text, emailController.text,
           passwordController.text, passwordConfirmationController.text);
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => HomeScreen()));

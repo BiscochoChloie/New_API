@@ -1,17 +1,20 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:q/repositories/product_repository_interface.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../config/apiConfig.dart';
+import '../configurations/api_configuration.dart';
 import '../models/productModel.dart';
 
-class ProductServices {
-  static Future<List<ProductModel>> getAllProducts() async {
+class ProductRepository implements ProductRepositoryInterface {
+  @override
+  Future<List<ProductModel>> getAllProducts(int currentPage) async {
     String? token;
+
     SharedPreferences preferences = await SharedPreferences.getInstance();
     token = preferences.getString('token');
 
     var response = await http.get(
-      Uri.parse("${ApiConfig.BASE_URL}/api/products"),
+      Uri.parse("${ApiConfiguration.BASE_URL}/api/products?page=$currentPage"),
       headers: {
         "Content-Type": "application/json",
         "accept": "application/json",
@@ -20,10 +23,17 @@ class ProductServices {
       },
     );
     if (response.statusCode == 200) {
-      print(token);
+      print("token: $token");
       var jsonResponse = json.decode(response.body);
-      var jsonProducts = jsonResponse['data'];
 
+      int last_page = (json.decode(response.body)['last_page']);
+      preferences.setInt('last_page', jsonResponse['last_page']);
+      preferences.setInt('current_page', jsonResponse['current_page']);
+      Map data = {'current_page': currentPage, 'last_page': last_page};
+      print("Current Page: $currentPage");
+      print("Last Page: $last_page");
+
+      var jsonProducts = jsonResponse['data'];
       List<ProductModel> products = [];
       for (var jsonProduct in jsonProducts) {
         ProductModel product = ProductModel.fromJson(jsonProduct);
@@ -35,12 +45,13 @@ class ProductServices {
     }
   }
 
-  static Future<ProductModel?> getSingleProducts(int id) async {
+  @override
+  Future<ProductModel?> getSingleProducts(int id) async {
     String? token;
     SharedPreferences preferences = await SharedPreferences.getInstance();
     token = preferences.getString('token');
     var response = await http.get(
-      Uri.parse("${ApiConfig.BASE_URL}/api/products/$id"),
+      Uri.parse("${ApiConfiguration.BASE_URL}/api/products/$id"),
       headers: {
         "Content-Type": "application/json",
         "accept": "application/json",
@@ -68,7 +79,7 @@ class ProductServices {
     token = prefs.getString('token');
 
     String body = json.encode(data);
-    Uri url = Uri.parse("${ApiConfig.BASE_URL}/api/products");
+    Uri url = Uri.parse("${ApiConfiguration.BASE_URL}/api/products");
     var response = await http.post(
       url,
       body: body,
@@ -91,13 +102,14 @@ class ProductServices {
     }
   }
 
-  static Future<ProductModel?> editProduct(
+  @override
+  Future<ProductModel?> editProduct(
       int id, String name, imagelink, price) async {
     var jsonResponse;
     Map data = {
+      'id': id,
       'name': name,
       'image_link': imagelink,
-      'description': '',
       'price': price,
       'is_published': true
     };
@@ -107,7 +119,7 @@ class ProductServices {
     token = preferences.getString('token');
 
     String body = json.encode(data);
-    Uri url = Uri.parse("${ApiConfig.BASE_URL}/api/products/$id");
+    Uri url = Uri.parse("${ApiConfiguration.BASE_URL}/api/products/$id");
     var response = await http.put(
       url,
       body: body,
@@ -124,20 +136,22 @@ class ProductServices {
 
     if (response.statusCode == 201) {
       // jsonResponse = json.decode(response.body.toString());
-      ProductModel.fromJson(jsonDecode(response.body));
+      ProductModel.fromJson(jsonDecode(response.body.toString()));
     } else {
       throw Exception('Failed to Edit a Product');
     }
+    return null;
   }
 
-  static Future<void> DeleteProduct(String id) async {
+  @override
+  Future<void> deleteProduct(String id) async {
     var jsonResponse;
 
     String? token;
     final preferences = await SharedPreferences.getInstance();
     token = preferences.getString('token');
 
-    Uri url = Uri.parse("${ApiConfig.BASE_URL}/api/products/$id");
+    Uri url = Uri.parse("${ApiConfiguration.BASE_URL}/api/products/$id");
     var response = await http.delete(
       url,
       headers: {

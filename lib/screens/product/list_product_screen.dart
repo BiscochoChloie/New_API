@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import '../../models/productModel.dart';
-import '../../services/product_services.dart';
+import '../../repositories/product_repository.dart';
 import 'single_product_screen.dart';
 
 class ListProductScreen extends StatefulWidget {
@@ -14,17 +14,19 @@ class ListProductScreen extends StatefulWidget {
 
 class _ListProductScreenState extends State<ListProductScreen> {
   bool isLoading = false;
+  int page = 1;
+  int last_page = 1;
 
   @override
   void initState() {
     super.initState();
-    ProductServices.getAllProducts();
+    ProductRepository().getAllProducts(page);
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<ProductModel>>(
-        future: ProductServices.getAllProducts(),
+        future: ProductRepository().getAllProducts(page),
         builder: (context, snapshot) {
           if (snapshot.data == null) {
             return Center(child: CircularProgressIndicator());
@@ -51,32 +53,35 @@ class _ListProductScreenState extends State<ListProductScreen> {
                     child: Row(
                       children: [
                         SizedBox(
-                          height: 135,
-                          width: 110,
-                          child: Image.network(
-                            product!.imageLink!,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Container(
-                                // color: Colors.amber,
-                                alignment: Alignment.center,
-                                child:
-                                    // Icon(Icons.error)
-
-                                    Center(
-                                  child: Image.asset(
-                                    'assets/images/no-image.png',
-                                    height: 135,
+                            height: 135,
+                            width: 110,
+                            child: Uri.parse(product!.imageLink!).isAbsolute
+                                ? Image.network(
+                                    product.imageLink!,
                                     fit: BoxFit.cover,
-                                  ),
-                                  //   //     Text(
-                                  //   //   'No Image Available',
-                                  //   // ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
+                                  )
+                                : Stack(
+                                    alignment: Alignment.center,
+                                    children: <Widget>[
+                                        Image.asset(
+                                          'assets/images/no-image.png',
+                                          height: 135,
+                                          fit: BoxFit.cover,
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 25.0),
+                                          child: Text(
+                                            'No Image Available',
+                                          ),
+                                        ),
+                                      ])
+
+                            //     ),
+                            //   );
+                            // },
+
+                            ),
                         SizedBox(width: 10),
                         Expanded(
                             child: SizedBox(
